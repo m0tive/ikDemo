@@ -9,20 +9,16 @@
  */
 
 import processing.opengl.*;
- 
-Bone bones[];
-final int nBones = 4;
+
+Node root = new Node();
 
 void setup() {
-  size(1024, 768, OPENGL);
-  background(0, 0, 0);
+  size(720, 576, OPENGL);
   
-  bones = new Bone[nBones];
+  root.addChild( new IkChain () );
+  shape(root);
 }
 
 void draw() {
-  background(0);
-  
-  for (int i=0; i != nBones; i++) {
-  }
+  background(190);
 }

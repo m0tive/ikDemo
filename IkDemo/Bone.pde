@@ -1,7 +1,2 @@
-class Bone {
-  
-  Bone (){
-  }
-  
-  
+class Bone extends Node {
 }
