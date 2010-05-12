@@ -1,7 +1,8 @@
-class IkChain extends Node {
-  Bone bones[];
-  
-  void drawNode () {
-    println( "drawing " + this.getClass() );
-  }
+class IkChain {//extends Node {
+
+    IkChain (int x, int y) {
+    }
+
+    ArrayList bones;
+
 }
