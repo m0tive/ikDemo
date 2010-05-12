@@ -55,7 +55,9 @@ void keyPressed() {
 
 boolean toggleBuildmode() {
     building = ! building;
-    if (!building){
+    if (building){
+        selected = (Node) root.getTips().get(0);
+    } else {
         selected.highlight = false;
         selected = null;
     }

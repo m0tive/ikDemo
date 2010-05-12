@@ -58,10 +58,16 @@ class Node{
         return m_y;
     }
 
-    //ArrayList getTips () {
-
-        if ( m_children.size() == 0 )
-
+    ArrayList getTips () {
+        ArrayList tips = new ArrayList();
+        if ( m_children.size() == 0 ) {
+            tips.add(this);
+        } else {
+            for ( int i = 0 ; i < m_children.size() ; ++i ){
+                tips.addAll(m_children.getTips());
+            }
+        }
+        return tips;
     }
 
     Node add ( int x, int y ) {
