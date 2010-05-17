@@ -17,14 +17,22 @@ boolean building = true;
 
 PFont font;
 
-void setup() {
+// Setup function {{{
+void setup()
+{
     size(720, 576);
 
     font = loadFont("FreeSans-16.vlw");
     textFont (font, 16);
-}
+}//}}}
 
-void draw() {
+void camera ()
+{
+    perspective( 45.0, float(width)/float(height), 0.1, 100.0);
+
+// Draw function {{{
+void draw()
+{
     background(190);
 
     smooth();
@@ -40,8 +48,9 @@ void draw() {
         text("Building mode: Click to insert new nodes. Press SPACE to go to animation mode", 15, 30);
     else
         text("Animation mode: Select and drag a joint. Press SPACE to go to building mode...",15,30);
-}
+}//}}}
 
+// Input functions {{{
 void mousePressed() {
     println("mousePressed : "  + mouseX + " " + mouseY );
     if (building)
@@ -52,6 +61,7 @@ void keyPressed() {
     if (key == ' ')
         toggleBuildmode();
 }
+// }}}
 
 boolean toggleBuildmode() {
     building = ! building;
@@ -68,11 +78,11 @@ boolean toggleBuildmode() {
 void addJoint(int x, int y) {
     println("addJoint " + x + " " + y );
     if ( root == null ) {
-        selected = root = new Node ( x, y, null );
-    } else {
-        if ( selected != null )
-            selected.highlight = false;
-        selected = selected.add( x, y );
-        selected.highlight = true;
-    }
+        selected = root = new Node ( x, y, 0);
+    } //else {
+//        if ( selected != null )
+//            selected.highlight = false;
+//        selected = selected.add( x, y );
+//        selected.highlight = true;
+//    }
 }
