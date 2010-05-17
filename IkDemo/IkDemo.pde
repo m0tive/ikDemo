@@ -10,79 +10,27 @@
 
 import processing.opengl.*;
 
-Node root;
-Node selected;
-
-boolean building = true;
-
 PFont font;
 
-// Setup function {{{
-void setup()
-{
-    size(720, 576);
+CCamera camera1;
+
+void setup() { //{{{
+    size(720, 576, OPENGL);
+    frameRate(30);
 
     font = loadFont("FreeSans-16.vlw");
     textFont (font, 16);
+
+    camera1 = new CCamera (this, 0.1, 1000);
+    camera1.jump(10,200,400);
+    camera1.aim(0,0,0);
+} //}}}
+
+void draw() { //{{{
+    background(40);
+
+    camera1.feed(this.g);
+
+    box(100);
+
 }//}}}
-
-void camera ()
-{
-    perspective( 45.0, float(width)/float(height), 0.1, 100.0);
-
-// Draw function {{{
-void draw()
-{
-    background(190);
-
-    smooth();
-
-    if (root != null)
-        root.display();
-
-    fill(0x66ffffff);
-    noStroke();
-    rect(0,0,720,50);
-    fill(0xff000000);
-    if (building)
-        text("Building mode: Click to insert new nodes. Press SPACE to go to animation mode", 15, 30);
-    else
-        text("Animation mode: Select and drag a joint. Press SPACE to go to building mode...",15,30);
-}//}}}
-
-// Input functions {{{
-void mousePressed() {
-    println("mousePressed : "  + mouseX + " " + mouseY );
-    if (building)
-        addJoint(mouseX, mouseY);
-}
-
-void keyPressed() {
-    if (key == ' ')
-        toggleBuildmode();
-}
-// }}}
-
-boolean toggleBuildmode() {
-    building = ! building;
-    if (building){
-        selected = (Node) root.getTips().get(0);
-        selected.highlight = true;
-    } else {
-        selected.highlight = false;
-        selected = null;
-    }
-    return building;
-}
-
-void addJoint(int x, int y) {
-    println("addJoint " + x + " " + y );
-    if ( root == null ) {
-        selected = root = new Node ( x, y, 0);
-    } //else {
-//        if ( selected != null )
-//            selected.highlight = false;
-//        selected = selected.add( x, y );
-//        selected.highlight = true;
-//    }
-}

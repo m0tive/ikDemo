@@ -1,2 +1,4 @@
 applet
 *.log
+*.stackdump
+bin
