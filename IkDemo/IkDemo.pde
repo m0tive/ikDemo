@@ -57,6 +57,7 @@ boolean toggleBuildmode() {
     building = ! building;
     if (building){
         selected = (Node) root.getTips().get(0);
+        selected.highlight = true;
     } else {
         selected.highlight = false;
         selected = null;

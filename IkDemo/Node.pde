@@ -64,7 +64,8 @@ class Node{
             tips.add(this);
         } else {
             for ( int i = 0 ; i < m_children.size() ; ++i ){
-                tips.addAll(m_children.getTips());
+                Node child = (Node) m_children.get(i);
+                tips.addAll(child.getTips());
             }
         }
         return tips;
