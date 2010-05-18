@@ -20,6 +20,19 @@ class CBone extends CGraphNode {
         gout.ellipse(0,0,ring,ring);
         popMatrix();
         popStyle();
+
+        gout.pushStyle();
+        gout.pushMatrix();
+
+        gout.stroke(0xffffffff);
+        gout.strokeWeight(2);
+        gout.rotateZ(-m_roll);
+        gout.rotateY(-m_yaw);
+        gout.rotateX(-m_pitch);
+        gout.line(0,0,0,-m_x,-m_y,-m_z);
+
+        gout.popMatrix();
+        gout.popStyle();
     }
 
     protected void idGeom (PGraphics gout) {
@@ -30,15 +43,15 @@ class CBone extends CGraphNode {
         int size = m_children.size();
         for ( int i = 0 ; i < size ; ++i ){
             CNode child = (CNode) m_children.get(i);
-            float[] cpos = child.getPosition();
-
-            gout.pushStyle();
-
-            gout.stroke(0xffffffff);
-            gout.strokeWeight(2);
-            gout.line(0,0,0,cpos[0],cpos[1],cpos[2]);
-
-            gout.popStyle();
+//            float[] cpos = child.getPosition();
+//
+//            gout.pushStyle();
+//
+//            gout.stroke(0xffffffff);
+//            gout.strokeWeight(2);
+//            gout.line(0,0,0,cpos[0],cpos[1],cpos[2]);
+//
+//            gout.popStyle();
 
             child.display(gout);
         }

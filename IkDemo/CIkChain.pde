@@ -8,12 +8,12 @@ class CIkChain extends CNode {
         m_beginBone = _begin;
         m_endBone = _end;
 
-        m_beginBone.addChild(this);
-        float[] bpos = m_beginBone.getWorldPosition();
-        float[] epos = m_endBone.getWorldPosition();
-        m_x = epos[0] - bpos[0];
-        m_y = epos[1] - bpos[1];
-        m_z = epos[2] - bpos[2];
+//        m_beginBone.addChild(this);
+//        float[] bpos = m_beginBone.getWorldPosition();
+//        float[] epos = m_endBone.getWorldPosition();
+//        m_x = epos[0] - bpos[0];
+//        m_y = epos[1] - bpos[1];
+//        m_z = epos[2] - bpos[2];
     }
 
     private int ring = 100;
@@ -40,4 +40,10 @@ class CIkChain extends CNode {
         gout.sphere(ring);
     }
 
+    protected boolean buildChain (CBone _begin, CBone _end) {
+        if (_begin == null || _end == null)
+            return false;
+
+        
+    }
 }
