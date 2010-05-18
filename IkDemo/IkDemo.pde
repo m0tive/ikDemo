@@ -48,6 +48,8 @@ void setup() { //{{{
 //    bone2.m_roll = PI/4;
 //    bone3.m_roll = PI/4;
 
+    CIkChain ik1 = new CIkChain(bone1,bone4);
+
     root = new CGraphNode();
     root.addChild(bone1);
 } //}}}
