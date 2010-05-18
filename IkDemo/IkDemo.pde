@@ -46,8 +46,8 @@ void setup() { //{{{
 
     bone1.m_yaw = PI/4;
     bone2.m_pitch = PI/4;
-//    bone2.m_roll = PI/4;
-//    bone3.m_roll = PI/4;
+    bone2.m_roll = PI/4;
+    bone3.m_roll = PI/4;
 
     CIkChain ik1 = new CIkChain(bone1,bone4);
 

@@ -25,16 +25,9 @@ class CGraphNode extends CNode {
 
     void display (PGraphics gout) {
         gout.pushMatrix();
-
         this.applyMatrix(gout);
 
-//        gout.translate(m_x,m_y,m_z);
-        gout.rotateX(m_pitch);
-        gout.rotateY(m_yaw);
-        gout.rotateZ(m_roll);
-
         this.geom(gout);
-
         displayChildren(gout);
 
         gout.popMatrix();
@@ -49,17 +42,28 @@ class CGraphNode extends CNode {
 
 
     void idDisplay (PGraphics gout) {
+        gout.pushStyle();
+        gout.fill(0xFF000000 + m_id);
+
         gout.pushMatrix();
+        this.applyMatrix(gout);
 
-        gout.translate(m_x,m_y,m_z);
-        gout.rotateX(m_pitch);
-        gout.rotateY(m_yaw);
-        gout.rotateZ(m_roll);
-
-        super.idDisplay(gout);
+        this.idGeom(gout);
         idDisplayChildren(gout);
 
         gout.popMatrix();
+        gout.popStyle();
+//        gout.pushMatrix();
+//
+//        gout.translate(m_x,m_y,m_z);
+//        gout.rotateX(m_pitch);
+//        gout.rotateY(m_yaw);
+//        gout.rotateZ(m_roll);
+//
+//        super.idDisplay(gout);
+//        idDisplayChildren(gout);
+//
+//        gout.popMatrix();
     }
 
     protected void idDisplayChildren (PGraphics gout) {

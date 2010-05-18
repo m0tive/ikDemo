@@ -50,6 +50,10 @@ class CNode{
     void applyMatrix(PGraphics gout) {
         m_mat.reset();
         m_mat.translate(m_x,m_y,m_z);
+        m_mat.rotateX(m_pitch);
+        m_mat.rotateY(m_yaw);
+        m_mat.rotateZ(m_roll);
+
         gout.applyMatrix(m_mat);
     }
 
@@ -97,18 +101,23 @@ class CNode{
     void display (PGraphics gout) {
         gout.pushMatrix();
         this.applyMatrix(gout);
+
         this.geom(gout);
+
         gout.popMatrix();
     }
 
     void idDisplay (PGraphics gout) {
-        pushStyle();
-
+        gout.pushStyle();
         gout.fill(0xFF000000 + m_id);
+
+        gout.pushMatrix();
+        this.applyMatrix(gout);
 
         this.idGeom(gout);
 
-        popStyle();
+        gout.popMatrix();
+        gout.popStyle();
     }
 
     protected void geom (PGraphics gout) {
