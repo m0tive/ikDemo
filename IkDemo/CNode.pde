@@ -1,9 +1,11 @@
-import java.lang.Integer;
+import processing.core.PMatrix;
 
 class CNode{
 
     protected float m_x, m_y, m_z;
     float m_pitch, m_roll, m_yaw;
+
+    PMatrix3D m_mat;
     protected int m_id;
 
     private CGraphNode m_parent;
@@ -25,6 +27,8 @@ class CNode{
         m_y = _y;
         m_z = _z;
         this.setId(_id);
+
+        m_mat = new PMatrix3D();
     }
 
     void setX (float _x) {
@@ -37,6 +41,16 @@ class CNode{
 
     void setZ (float _z) {
         m_z = _z;
+    }
+
+    PMatrix3D getMatrix() {
+        return new PMatrix3D (m_mat);
+    }
+
+    void applyMatrix(PGraphics gout) {
+        m_mat.reset();
+        m_mat.translate(m_x,m_y,m_z);
+        gout.applyMatrix(m_mat);
     }
 
     float[] getPosition () {
@@ -81,7 +95,10 @@ class CNode{
     }
 
     void display (PGraphics gout) {
+        gout.pushMatrix();
+        this.applyMatrix(gout);
         this.geom(gout);
+        gout.popMatrix();
     }
 
     void idDisplay (PGraphics gout) {

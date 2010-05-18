@@ -26,12 +26,14 @@ class CGraphNode extends CNode {
     void display (PGraphics gout) {
         gout.pushMatrix();
 
-        gout.translate(m_x,m_y,m_z);
+        this.applyMatrix(gout);
+
+//        gout.translate(m_x,m_y,m_z);
         gout.rotateX(m_pitch);
         gout.rotateY(m_yaw);
         gout.rotateZ(m_roll);
 
-        super.display(gout);
+        this.geom(gout);
 
         displayChildren(gout);
 

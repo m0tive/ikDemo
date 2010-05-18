@@ -9,6 +9,7 @@
  */
 
 import processing.opengl.*;
+import matrixMath.*;
 
 PGraphics buffer;
 PFont font;
@@ -102,3 +103,4 @@ void mouseClicked() {
     if( pick != 0 )
         println( pick );
 }
+
