@@ -43,7 +43,14 @@ class CIkChain extends CNode {
     protected boolean buildChain (CBone _begin, CBone _end) {
         if (_begin == null || _end == null)
             return false;
+        CGraphNode curr = _end;
+        int i;
+        for (i = 0; curr != null && curr != _begin; ++i) {
+            curr = curr.getParent();
+        }
+        if (curr == null)
+            return false;
 
-        
+        // build array...
     }
 }
