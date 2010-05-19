@@ -9,7 +9,6 @@
  */
 
 import processing.opengl.*;
-import matrixMath.*;
 
 PGraphics buffer;
 PFont font;
@@ -49,10 +48,15 @@ void setup() { //{{{
     bone2.m_roll = PI/4;
     bone3.m_roll = PI/4;
 
-    CIkChain ik1 = new CIkChain(bone1,bone4);
-
     root = new CGraphNode();
     root.addChild(bone1);
+
+    CIkChain ik1 = new CIkChain(bone2,bone4);
+    CGraphNode goal1 = new CGraphNode(100,20,30,999);
+    root.addChild(goal1);
+
+    ik1.setGoal(goal1,false);
+
 } //}}}
 
 void draw() { //{{{

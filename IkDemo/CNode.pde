@@ -5,8 +5,9 @@ class CNode{
     protected float m_x, m_y, m_z;
     float m_pitch, m_roll, m_yaw;
 
-    PMatrix3D m_mat;
+    private PMatrix3D m_mat;
     protected int m_id;
+    protected float m_size;
 
     private CGraphNode m_parent;
 
@@ -29,6 +30,8 @@ class CNode{
         this.setId(_id);
 
         m_mat = new PMatrix3D();
+
+        m_size = 30;
     }
 
     void setX (float _x) {
@@ -44,33 +47,30 @@ class CNode{
     }
 
     PMatrix3D getMatrix() {
-        return new PMatrix3D (m_mat);
-    }
-
-    void applyMatrix(PGraphics gout) {
         m_mat.reset();
         m_mat.translate(m_x,m_y,m_z);
         m_mat.rotateX(m_pitch);
         m_mat.rotateY(m_yaw);
         m_mat.rotateZ(m_roll);
 
-        gout.applyMatrix(m_mat);
+        return new PMatrix3D (m_mat);
+    }
+
+    PMatrix3D getWorldMatrix() {
+        if(m_parent == null)
+            return getMatrix();
+
+        PMatrix3D out = new PMatrix3D(getMatrix());
+        out.apply(m_parent.getWorldMatrix());
+        return out;
+    }
+
+    void applyMatrix(PGraphics gout) {
+        gout.applyMatrix(getMatrix());
     }
 
     float[] getPosition () {
         float[] out = {m_x,m_y,m_z};
-        return out;
-    }
-
-    float[] getWorldPosition () {
-        float[] out = {m_x,m_y,m_z};
-        if ( m_parent != null )
-        {
-            float[] ppos = m_parent.getWorldPosition();
-            out[0] += ppos[0];
-            out[1] += ppos[1];
-            out[2] += ppos[2];
-        }
         return out;
     }
 
@@ -121,10 +121,18 @@ class CNode{
     }
 
     protected void geom (PGraphics gout) {
+        pushStyle();
+        gout.noFill();
+        gout.stroke(0xff00ffff);
+        float halfsize = m_size*0.5;
+        gout.line(-halfsize,0,0,halfsize,0,0);
+        gout.line(0,-halfsize,0,0,halfsize,0);
+        gout.line(0,0,-halfsize,0,0,halfsize);
+        popStyle();
     }
 
     protected void idGeom (PGraphics gout) {
-        this.geom(gout);
+        gout.sphere(m_size);
     }
 
 }

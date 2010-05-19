@@ -62,9 +62,11 @@ class CBone extends CGraphNode {
     }
 
     void addChild (CNode _child, float _offset) {
-        _child.setX(0);
-        _child.setY(_offset);
-        _child.setZ(0);
+        if (_child instanceof CBone) {
+            _child.setX(0);
+            _child.setY(_offset);
+            _child.setZ(0);
+        }
         super.addChild(_child);
     }
 }
