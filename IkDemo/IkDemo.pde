@@ -9,6 +9,7 @@
  */
 
 import processing.opengl.*;
+import toxi.geom.*;
 
 PGraphics buffer;
 PFont font;
@@ -50,6 +51,10 @@ void setup() { //{{{
 
     root = new CGraphNode();
     root.addChild(bone1);
+
+    println(bone1.getMatrix());
+    println();
+    println(bone2.getMatrix());
 
     CIkChain ik1 = new CIkChain(bone1,bone4);
     CGraphNode goal1 = new CGraphNode(100,20,30,999);

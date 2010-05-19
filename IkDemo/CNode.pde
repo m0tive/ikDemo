@@ -5,7 +5,7 @@ class CNode{
     protected float m_x, m_y, m_z;
     float m_pitch, m_roll, m_yaw;
 
-    private PMatrix3D m_mat;
+    private Matrix4x4 m_mat;
     protected int m_id;
     protected float m_size;
 
@@ -29,7 +29,7 @@ class CNode{
         m_z = _z;
         this.setId(_id);
 
-        m_mat = new PMatrix3D();
+        m_mat = new Matrix4x4();
 
         m_size = 30;
     }
@@ -46,27 +46,30 @@ class CNode{
         m_z = _z;
     }
 
-    PMatrix3D getMatrix() {
-        m_mat.reset();
-        m_mat.translate(m_x,m_y,m_z);
+    Matrix4x4 getMatrix() {
+        m_mat.identity();
+        m_mat.translateSelf(m_x,m_y,m_z);
         m_mat.rotateX(m_pitch);
         m_mat.rotateY(m_yaw);
         m_mat.rotateZ(m_roll);
 
-        return new PMatrix3D (m_mat);
+        return new Matrix4x4 (m_mat);
     }
 
-    PMatrix3D getWorldMatrix() {
+    Matrix4x4 getWorldMatrix() {
         if(m_parent == null)
             return getMatrix();
 
-        PMatrix3D out = new PMatrix3D(getMatrix());
-        out.preApply(m_parent.getWorldMatrix());
-        return out;
+        Matrix4x4 out = new Matrix4x4(getMatrix());
+        Matrix4x4 pma = m_parent.getWorldMatrix();
+        return pma.multiply(out);
     }
 
     void applyMatrix(PGraphics gout) {
-        gout.applyMatrix(getMatrix());
+        PMatrix3D mat = new PMatrix3D();
+        mat.set(getMatrix().toFloatArray(null));
+
+        gout.applyMatrix(mat);
     }
 
     float[] getPosition () {
@@ -98,14 +101,14 @@ class CNode{
         return m_parent;
     }
 
-    PVector getVectorTo(CNode _n) {
-        PVector out = new PVector();
+    Vec3D getVectorTo(CNode _n) {
+        Vec3D out = new Vec3D();
 
-        PMatrix3D gMat = _n.getWorldMatrix();
-        PMatrix3D mMat = this.getWorldMatrix();
+        Matrix4x4 gMat = _n.getWorldMatrix();
+        Matrix4x4 mMat = this.getWorldMatrix();
         mMat.invert();
-        out = gMat.mult(out,null);
-        return mMat.mult(out,null);
+        out = gMat.applyTo(out);
+        return mMat.applyTo(out);
     }
 
     void display (PGraphics gout) {

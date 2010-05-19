@@ -2,3 +2,4 @@ applet
 *.log
 *.stackdump
 bin
+*.tmp

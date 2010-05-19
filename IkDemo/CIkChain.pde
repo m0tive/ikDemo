@@ -2,7 +2,7 @@ class CIkChain extends CNode {
 
     private CBone[] m_chain;
     private CGraphNode m_goal;
-    private PVector m_goalPos;
+    private Vec3D m_goalPos;
 
     CIkChain (CBone _begin, CBone _end) { this(_begin,_end,0); }
     CIkChain (CBone _begin, CBone _end, int _id) {
@@ -23,7 +23,7 @@ class CIkChain extends CNode {
         // if snapping, move the goal node to the position of the end bone
         if (_snap) {
 
-            PVector move = m_goal.getVectorTo(m_chain[m_chain.length-1]);
+            Vec3D move = m_goal.getVectorTo(m_chain[m_chain.length-1]);
             float[] pos = m_goal.getPosition();
             m_goal.setX(pos[0] + move.x);
             m_goal.setY(pos[1] + move.y);
@@ -45,7 +45,7 @@ class CIkChain extends CNode {
         gout.line(0,-halfsize,0,0,halfsize,0);
         gout.line(0,0,-halfsize,0,0,halfsize);
 
-        if (m_goal != null) {
+        if (m_goal != null && m_goalPos != null ) {
             gout.line(0,0,0,m_goalPos.x,m_goalPos.y,m_goalPos.z);
         }
 
@@ -58,22 +58,23 @@ class CIkChain extends CNode {
         if (m_goal != null) {
             m_goalPos = getVectorTo(m_goal);
 
-            float dist = m_chain[m_chain.length-1].getVectorTo(m_goal).mag();
+            float dist = m_chain[m_chain.length-1].getVectorTo(m_goal).magnitude();
             if (dist < 0.001) dist = 0;
-//            println("dist " + dist);
+ //            println("dist " + dist);
 
-            PVector vect, vect2dA, vect2dB;
-            PVector dir = new PVector(0,1,0);
+            Vec3D vect;
+            Vec2D vect2dA, vect2dB;
+            Vec3D dir = new Vec3D(0,1,0);
             float cosAngle, angle, xrot, zrot;
             for (int i = m_chain.length - 2; i != -1; --i) {
                 vect = m_chain[i].getVectorTo(m_goal);
-                cosAngle = vect.dot(dir)/vect.mag();
-//                println(m_chain[i].getId() + " " + cosAngle );
+                cosAngle = vect.dot(dir)/vect.magnitude();
+ //                println(m_chain[i].getId() + " " + cosAngle );
 
                 if (cosAngle < 0.9) {
-//                    angle = cos(cosAngle);
-                    vect2dA = new PVector(vect.x,vect.y);
-                    vect2dB = new PVector(dir.x,dir.y);
+ //                    angle = cos(cosAngle);
+                    vect2dA = new Vec2D(vect.x,vect.y);
+                    vect2dB = new Vec2D(dir.x,dir.y);
                     vect2dA.normalize();
                     vect2dB.normalize();
                     zrot = vect2dA.dot(vect2dB);
@@ -82,8 +83,8 @@ class CIkChain extends CNode {
                         m_chain[i].m_roll += cos(zrot)*0.1;
 
 
-                    vect2dA = new PVector(vect.y,vect.z);
-                    vect2dB = new PVector(dir.y,dir.z);
+                    vect2dA = new Vec2D(vect.y,vect.z);
+                    vect2dB = new Vec2D(dir.y,dir.z);
                     vect2dA.normalize();
                     vect2dB.normalize();
                     xrot = vect2dA.dot(vect2dB);
