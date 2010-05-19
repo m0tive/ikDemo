@@ -1,11 +1,9 @@
 import processing.core.PMatrix;
 
 class CNode{
+    Vec3D position;
+    Quaternion rotation;
 
-    protected float m_x, m_y, m_z;
-    float m_pitch, m_roll, m_yaw;
-
-    private Matrix4x4 m_mat;
     protected int m_id;
     protected float m_size;
 
@@ -24,36 +22,30 @@ class CNode{
     }
 
     CNode(float _x, float _y, float _z, int _id) {
-        m_x = _x;
-        m_y = _y;
-        m_z = _z;
+        position = new Vec3D (_x, _y, _z);
+        rotation = new Quaternion();
         this.setId(_id);
-
-        m_mat = new Matrix4x4();
 
         m_size = 30;
     }
 
-    void setX (float _x) {
-        m_x = _x;
+    void pitch (float _a) {
+        rotation = rotation.multiply(Quaternion.createFromEuler(0,0,_a));
     }
 
-    void setY (float _y) {
-        m_y = _y;
+    void yaw (float _a) {
+        rotation = rotation.multiply(Quaternion.createFromEuler(_a,0,0));
     }
 
-    void setZ (float _z) {
-        m_z = _z;
+    void roll (float _a) {
+        rotation = rotation.multiply(Quaternion.createFromEuler(0,_a,0));
     }
 
     Matrix4x4 getMatrix() {
-        m_mat.identity();
-        m_mat.translateSelf(m_x,m_y,m_z);
-        m_mat.rotateX(m_pitch);
-        m_mat.rotateY(m_yaw);
-        m_mat.rotateZ(m_roll);
-
-        return new Matrix4x4 (m_mat);
+        Matrix4x4 mat = new Matrix4x4();
+        mat.translateSelf(position);
+        Matrix4x4 rot = rotation.toMatrix4x4();
+        return mat.multiply(rot);
     }
 
     Matrix4x4 getWorldMatrix() {
@@ -70,11 +62,6 @@ class CNode{
         mat.set(getMatrix().toFloatArray(null));
 
         gout.applyMatrix(mat);
-    }
-
-    float[] getPosition () {
-        float[] out = {m_x,m_y,m_z};
-        return out;
     }
 
     int getId () {

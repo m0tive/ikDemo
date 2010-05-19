@@ -21,8 +21,13 @@ PFont font;
 CCamera camera1;
 
 CGraphNode root;
+CGraphNode goal1;
 
 int spin = 0;
+boolean shift = false;
+int moveX = 0;
+int moveY = 0;
+int moveZ = 0;
 
 void setup() { //{{{
     size(720, 576, OPENGL);
@@ -48,10 +53,9 @@ void setup() { //{{{
     bone2.addChild(bone3,75);
     bone3.addChild(bone4,50);
 
-    bone1.m_yaw = PI/4;
-    bone2.m_pitch = PI/4;
-    bone2.m_roll = PI/4;
-    bone3.m_roll = PI/4;
+    bone1.yaw(PI/4);
+    bone2.pitch(PI/4);
+    bone3.roll(PI/4);
 
     root = new CGraphNode();
     root.addChild(bone1);
@@ -61,7 +65,7 @@ void setup() { //{{{
     println(bone2.getMatrix());
 
     CIkChain ik1 = new CIkChain(bone1,bone4);
-    CGraphNode goal1 = new CGraphNode(100,20,30,999);
+    goal1 = new CGraphNode(100,20,30,999);
     root.addChild(goal1);
 
     ik1.setGoal(goal1,false);
@@ -74,6 +78,10 @@ void draw() { //{{{
     lights();
 
     camera1.circle(0.03*spin);
+
+    goal1.position.x += moveX * 1;
+    goal1.position.y += moveY * 1;
+    goal1.position.z += moveZ * 1;
 
     camera1.feed(this.g);
 
@@ -97,13 +105,61 @@ void draw() { //{{{
 }//}}}
 
 void keyPressed() {
-    if(key == ' ')
-        spin = 1;
+    if (key == ' ') {
+        if (shift)
+            spin = -1;
+        else
+            spin = 1;
+    }
+    else if (key == CODED){
+        switch (keyCode) {
+            case UP:
+                moveX = 1;
+                break;
+            case DOWN:
+                moveX = -1;
+                break;
+            case LEFT:
+                moveZ = 1;
+                break;
+            case RIGHT:
+                moveZ = -1;
+                break;
+            case KeyEvent.VK_PAGE_UP:
+                moveY = 1;
+                break;
+            case KeyEvent.VK_PAGE_DOWN:
+                moveY = -1;
+                break;
+            case SHIFT:
+                shift = true;
+                break;
+        }
+    }
 }
 
 void keyReleased() {
     if(key == ' ')
         spin = 0;
+    else if (key == CODED){
+        switch (keyCode) {
+            case UP:
+            case DOWN:
+                moveX = 0;
+                break;
+            case LEFT:
+            case RIGHT:
+                moveZ = 0;
+                break;
+            case KeyEvent.VK_PAGE_UP:
+            case KeyEvent.VK_PAGE_DOWN:
+                moveY = 0;
+                break;
+            case SHIFT:
+                shift = false;
+                break;
+        }
+    }
 }
 
 void mouseClicked() {

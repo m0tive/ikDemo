@@ -26,10 +26,9 @@ class CBone extends CGraphNode {
 
         gout.stroke(0xffffffff);
         gout.strokeWeight(2);
-        gout.rotateZ(-m_roll);
-        gout.rotateY(-m_yaw);
-        gout.rotateX(-m_pitch);
-        gout.line(0,0,0,-m_x,-m_y,-m_z);
+
+        Vec3D line = getVectorTo(getParent());
+        gout.line(0,0,0,line.x,line.y,line.z);
 
         gout.popMatrix();
         gout.popStyle();
@@ -63,9 +62,8 @@ class CBone extends CGraphNode {
 
     void addChild (CNode _child, float _offset) {
         if (_child instanceof CBone) {
-            _child.setX(0);
-            _child.setY(_offset);
-            _child.setZ(0);
+            _child.position.x = _child.position.z = 0;
+            _child.position.y = _offset;
         }
         super.addChild(_child);
     }

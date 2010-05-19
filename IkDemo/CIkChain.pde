@@ -22,12 +22,8 @@ class CIkChain extends CNode {
 
         // if snapping, move the goal node to the position of the end bone
         if (_snap) {
-
             Vec3D move = m_goal.getVectorTo(m_chain[m_chain.length-1]);
-            float[] pos = m_goal.getPosition();
-            m_goal.setX(pos[0] + move.x);
-            m_goal.setY(pos[1] + move.y);
-            m_goal.setZ(pos[2] + move.z);
+            m_goal.position.addSelf(move);
         }
     }
 
@@ -54,30 +50,48 @@ class CIkChain extends CNode {
 
     protected void idGeom (PGraphics gout) {}
 
+    CBone getTip () {
+        return m_chain[m_chain.length - 1];
+    }
+
     void update () {
         if (m_goal != null) {
             m_goalPos = getVectorTo(m_goal);
 
-            Vec3D goalVec, rotAxis, upVec = new Vec3D(0,1,0);
+            Vec3D goalVec, tipVec, rotAxis, upVec = new Vec3D(0,1,0);
             Quaternion currQuat = new Quaternion();
             float angle;
-            for (int i = m_chain.length - 2; i != -1; --i) {
-                println("--" + m_chain[i].getId());
-                goalVec = m_chain[i].getVectorTo(m_goal);
-                angle = goalVec.angleBetween(upVec,true);
-                println("angle " + degrees(angle));
+            int close = 0;
 
-                // get the rotation axis...
-                rotAxis = goalVec.cross(upVec).normalize();
-                println("rotAxis " + rotAxis);
+            float distance = 1;
+            int k = 0;
+            while(close != m_chain.length-1 && distance > 0.1 && k < 100) {
+                for (int i = m_chain.length - 2; i != -1; --i) {
+                    goalVec = m_chain[i].getVectorTo(m_goal);
+                    tipVec = m_chain[i].getVectorTo(getTip());
+                    angle = goalVec.angleBetween(tipVec,true);
 
-                Quaternion goalQuat =
-                    Quaternion.createFromAxisAngle(rotAxis,angle);
-                println("goalQuat " + goalQuat);
+                    if (angle > 0.00001) {
+                        // get the rotation axis...
+                        rotAxis = goalVec.cross(tipVec).normalize();
 
-                // SLERP it...
-                Quaternion slerpQuat = currQuat.interpolateTo(goalQuat,0.1);
-                println("slerpQuat " + slerpQuat);
+                        Quaternion goalQuat =
+                            Quaternion.createFromAxisAngle(rotAxis,-angle);
+
+                        // SLERP it...
+                        Quaternion slerpQuat = 
+                            currQuat.interpolateTo(goalQuat,0.5);
+
+                        m_chain[i].rotation = m_chain[i].rotation.multiply(slerpQuat);
+    //                    break;
+                    } else {
+                        ++close;
+                    }
+
+                }
+                tipVec = m_goal.getVectorTo(getTip());
+                distance = tipVec.magnitude();
+                ++k;
             }
 
             // {{{
