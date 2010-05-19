@@ -61,7 +61,7 @@ class CNode{
             return getMatrix();
 
         PMatrix3D out = new PMatrix3D(getMatrix());
-        out.apply(m_parent.getWorldMatrix());
+        out.preApply(m_parent.getWorldMatrix());
         return out;
     }
 
@@ -96,6 +96,16 @@ class CNode{
 
     CGraphNode getParent () {
         return m_parent;
+    }
+
+    PVector getVectorTo(CNode _n) {
+        PVector out = new PVector();
+
+        PMatrix3D gMat = _n.getWorldMatrix();
+        PMatrix3D mMat = this.getWorldMatrix();
+        mMat.invert();
+        out = gMat.mult(out,null);
+        return mMat.mult(out,null);
     }
 
     void display (PGraphics gout) {

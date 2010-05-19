@@ -51,7 +51,7 @@ void setup() { //{{{
     root = new CGraphNode();
     root.addChild(bone1);
 
-    CIkChain ik1 = new CIkChain(bone2,bone4);
+    CIkChain ik1 = new CIkChain(bone1,bone4);
     CGraphNode goal1 = new CGraphNode(100,20,30,999);
     root.addChild(goal1);
 
@@ -77,7 +77,14 @@ void draw() { //{{{
         line(x, 0, 200, x, 0,-200);
     for(int z = -200 ; z < 210 ; z += 10)
         line(200, 0, z,-200, 0, z);
+    
+    ortho(0,width,-height,0,-1,1);
+    camera(0,0,-0.5, 0,0,0.5, 0,1,0);
 
+    resetMatrix();
+
+    fill(0xffffffff);
+    text(round(frameRate), 15, 30);
 }//}}}
 
 void keyPressed() {
