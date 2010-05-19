@@ -9,7 +9,11 @@
  */
 
 import processing.opengl.*;
-import toxi.geom.*;
+import toxi.geom.Matrix4x4;
+import toxi.geom.Vec3D;
+import toxi.geom.Vec2D;
+import toxi.geom.Quaternion;
+
 
 PGraphics buffer;
 PFont font;

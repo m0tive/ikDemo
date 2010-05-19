@@ -58,42 +58,65 @@ class CIkChain extends CNode {
         if (m_goal != null) {
             m_goalPos = getVectorTo(m_goal);
 
-            float dist = m_chain[m_chain.length-1].getVectorTo(m_goal).magnitude();
-            if (dist < 0.001) dist = 0;
- //            println("dist " + dist);
-
-            Vec3D vect;
-            Vec2D vect2dA, vect2dB;
-            Vec3D dir = new Vec3D(0,1,0);
-            float cosAngle, angle, xrot, zrot;
+            Vec3D goalVec, rotAxis, upVec = new Vec3D(0,1,0);
+            Quaternion currQuat = new Quaternion();
+            float angle;
             for (int i = m_chain.length - 2; i != -1; --i) {
-                vect = m_chain[i].getVectorTo(m_goal);
-                cosAngle = vect.dot(dir)/vect.magnitude();
- //                println(m_chain[i].getId() + " " + cosAngle );
+                println("--" + m_chain[i].getId());
+                goalVec = m_chain[i].getVectorTo(m_goal);
+                angle = goalVec.angleBetween(upVec,true);
+                println("angle " + degrees(angle));
 
-                if (cosAngle < 0.9) {
- //                    angle = cos(cosAngle);
-                    vect2dA = new Vec2D(vect.x,vect.y);
-                    vect2dB = new Vec2D(dir.x,dir.y);
-                    vect2dA.normalize();
-                    vect2dB.normalize();
-                    zrot = vect2dA.dot(vect2dB);
-                    println("zrot " + zrot);
-                    if (zrot < 0.9)
-                        m_chain[i].m_roll += cos(zrot)*0.1;
+                // get the rotation axis...
+                rotAxis = goalVec.cross(upVec).normalize();
+                println("rotAxis " + rotAxis);
 
+                Quaternion goalQuat =
+                    Quaternion.createFromAxisAngle(rotAxis,angle);
+                println("goalQuat " + goalQuat);
 
-                    vect2dA = new Vec2D(vect.y,vect.z);
-                    vect2dB = new Vec2D(dir.y,dir.z);
-                    vect2dA.normalize();
-                    vect2dB.normalize();
-                    xrot = vect2dA.dot(vect2dB);
-                    println("xrot " + xrot);
-                    if (xrot < 0.9)
-                        m_chain[i].m_pitch += cos(xrot)*0.1;
-                }
+                // SLERP it...
+                Quaternion slerpQuat = currQuat.interpolateTo(goalQuat,0.1);
+                println("slerpQuat " + slerpQuat);
             }
-            println("-");
+
+            // {{{
+//            float dist = m_chain[m_chain.length-1].getVectorTo(m_goal).magnitude();
+//            if (dist < 0.001) dist = 0;
+// //            println("dist " + dist);
+//
+//            Vec3D vect;
+//            Vec2D vect2dA, vect2dB;
+//            Vec3D dir = new Vec3D(0,1,0);
+//            float cosAngle, angle, xrot, zrot;
+//            for (int i = m_chain.length - 2; i != -1; --i) {
+//                vect = m_chain[i].getVectorTo(m_goal);
+//                cosAngle = vect.dot(dir)/vect.magnitude();
+// //                println(m_chain[i].getId() + " " + cosAngle );
+//
+//                if (cosAngle < 0.9) {
+// //                    angle = cos(cosAngle);
+//                    vect2dA = new Vec2D(vect.x,vect.y);
+//                    vect2dB = new Vec2D(dir.x,dir.y);
+//                    vect2dA.normalize();
+//                    vect2dB.normalize();
+//                    zrot = vect2dA.dot(vect2dB);
+//                    println("zrot " + zrot);
+//                    if (zrot < 0.9)
+//                        m_chain[i].m_roll += cos(zrot)*0.1;
+//
+//
+//                    vect2dA = new Vec2D(vect.y,vect.z);
+//                    vect2dB = new Vec2D(dir.y,dir.z);
+//                    vect2dA.normalize();
+//                    vect2dB.normalize();
+//                    xrot = vect2dA.dot(vect2dB);
+//                    println("xrot " + xrot);
+//                    if (xrot < 0.9)
+//                        m_chain[i].m_pitch += cos(xrot)*0.1;
+//                }
+//            }
+//            println("-"); //}}}
         }
     }
 
