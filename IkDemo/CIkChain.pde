@@ -14,18 +14,7 @@ class CIkChain extends CNode {
         _begin.addChild(this);
     }
 
-    void setGoal (CGraphNode _goal, boolean _snap) {
-        if (_goal.getParent() == null)
-            root.addChild(_goal);
-
-        m_goal = _goal;
-
-        // if snapping, move the goal node to the position of the end bone
-        if (_snap) {
-            Vec3D move = m_goal.getVectorTo(m_chain[m_chain.length-1]);
-            m_goal.position.addSelf(move);
-        }
-    }
+    //--------------------------------------------------------------------------
 
     void display (PGraphics gout) {
         this.update();
@@ -52,6 +41,21 @@ class CIkChain extends CNode {
 
     CBone getTip () {
         return m_chain[m_chain.length - 1];
+    }
+
+    //--------------------------------------------------------------------------
+
+    void setGoal (CGraphNode _goal, boolean _snap) {
+        if (_goal.getParent() == null)
+            root.addChild(_goal);
+
+        m_goal = _goal;
+
+        // if snapping, move the goal node to the position of the end bone
+        if (_snap) {
+            Vec3D move = m_goal.getVectorTo(m_chain[m_chain.length-1]);
+            m_goal.position.addSelf(move);
+        }
     }
 
     void update () {
@@ -83,7 +87,6 @@ class CIkChain extends CNode {
                             currQuat.interpolateTo(goalQuat,0.5);
 
                         m_chain[i].rotation = m_chain[i].rotation.multiply(slerpQuat);
-    //                    break;
                     } else {
                         ++close;
                     }
@@ -93,46 +96,10 @@ class CIkChain extends CNode {
                 distance = tipVec.magnitude();
                 ++k;
             }
-
-            // {{{
-//            float dist = m_chain[m_chain.length-1].getVectorTo(m_goal).magnitude();
-//            if (dist < 0.001) dist = 0;
-// //            println("dist " + dist);
-//
-//            Vec3D vect;
-//            Vec2D vect2dA, vect2dB;
-//            Vec3D dir = new Vec3D(0,1,0);
-//            float cosAngle, angle, xrot, zrot;
-//            for (int i = m_chain.length - 2; i != -1; --i) {
-//                vect = m_chain[i].getVectorTo(m_goal);
-//                cosAngle = vect.dot(dir)/vect.magnitude();
-// //                println(m_chain[i].getId() + " " + cosAngle );
-//
-//                if (cosAngle < 0.9) {
-// //                    angle = cos(cosAngle);
-//                    vect2dA = new Vec2D(vect.x,vect.y);
-//                    vect2dB = new Vec2D(dir.x,dir.y);
-//                    vect2dA.normalize();
-//                    vect2dB.normalize();
-//                    zrot = vect2dA.dot(vect2dB);
-//                    println("zrot " + zrot);
-//                    if (zrot < 0.9)
-//                        m_chain[i].m_roll += cos(zrot)*0.1;
-//
-//
-//                    vect2dA = new Vec2D(vect.y,vect.z);
-//                    vect2dB = new Vec2D(dir.y,dir.z);
-//                    vect2dA.normalize();
-//                    vect2dB.normalize();
-//                    xrot = vect2dA.dot(vect2dB);
-//                    println("xrot " + xrot);
-//                    if (xrot < 0.9)
-//                        m_chain[i].m_pitch += cos(xrot)*0.1;
-//                }
-//            }
-//            println("-"); //}}}
         }
     }
+
+    //--------------------------------------------------------------------------
 
     // Build the array of bones. {{{
     // This is done backwards, stepping through the CNodes' parents from the

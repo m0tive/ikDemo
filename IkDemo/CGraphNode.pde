@@ -7,6 +7,8 @@ class CGraphNode extends CNode {
     CGraphNode (float _x, float _y, float _z) { super(_x,_y,_z); }
     CGraphNode (float _x, float _y, float _z, int _id) { super(_x,_y,_z,_id); }
 
+    //--------------------------------------------------------------------------
+
     void addChild (CNode _child) {
         if (_child.getParent() == null) {
             m_children.add(_child);
@@ -22,6 +24,8 @@ class CGraphNode extends CNode {
         }
         return false;
     }
+
+    //--------------------------------------------------------------------------
 
     void display (PGraphics gout) {
         gout.pushMatrix();
