@@ -1,26 +1,51 @@
+// The IK Chain.
+// Derived from CNode, the chain cannot have any children but is intended to be
+// attached to a CBone.
 class CIkChain extends CNode {
 
+    // Array of bones in the IK chain
     private CBone[] m_chain;
+    // A reference to the goal node
     private CGraphNode m_goal;
+    // The goals relative position
     private Vec3D m_goalPos;
 
+    // Constructors {{{
+
+    // Constructor with start and end bones.
+    // param: _begin - First CBone in the chain.
+    // param: _end - Last CBone in the chain.
     CIkChain (CBone _begin, CBone _end) { this(_begin,_end,0); }
+    // Constructor with start and end bones, plus id number.
+    // param: _begin - First CBone in the chain.
+    // param: _end - Last CBone in the chain.
+    // param: _id - id number
     CIkChain (CBone _begin, CBone _end, int _id) {
         super(_id);
 
         m_size = 50;
-
+        // Build the IK chain.
         buildChain(_begin,_end);
+        // Add this node to the first bone in the chain.
         _begin.addChild(this);
     }
 
+    //}}}
+
     //--------------------------------------------------------------------------
 
+    // Display Functions {{{
+
+    // Draw the node to a graphics buffer.
+    // Adds a call to update().
+    // param: gout - the output PGraphics display buffer
     void display (PGraphics gout) {
         this.update();
         super.display(gout);
     }
 
+    // Draw the nodes shape.
+    // param: gout - the output PGraphics display buffer
     protected void geom (PGraphics gout) {
         pushStyle();
         gout.noFill();
@@ -37,14 +62,25 @@ class CIkChain extends CNode {
         popStyle();
     }
 
+    // Remove the functionality of the id shape.
+    // This is just intended to stop CIkChain from having an id shape.
     protected void idGeom (PGraphics gout) {}
 
+    //}}}
+
+    //--------------------------------------------------------------------------
+
+    // IK functions {{{
+
+    // Get the last bone in the chain.
+    // return: CBone - the last bone.
     CBone getTip () {
         return m_chain[m_chain.length - 1];
     }
 
-    //--------------------------------------------------------------------------
-
+    // Set the goal Node.
+    // param: _goal - the goal CNode.
+    // param: _snap - boolean, whether to move the goal to the last bones.
     void setGoal (CGraphNode _goal, boolean _snap) {
         if (_goal.getParent() == null)
             root.addChild(_goal);
@@ -58,7 +94,8 @@ class CIkChain extends CNode {
         }
     }
 
-    void update () {
+    // Update the IK chain.
+    void update () { //{{{
         if (m_goal != null) {
             m_goalPos = getVectorTo(m_goal);
 
@@ -97,15 +134,16 @@ class CIkChain extends CNode {
                 ++k;
             }
         }
-    }
+    }//}}}
 
-    //--------------------------------------------------------------------------
-
-    // Build the array of bones. {{{
+    // Build the array of bones.
     // This is done backwards, stepping through the CNodes' parents from the
     // the end to the beginning.
-    // False is returned if no link is found, or if the nodes are not CBones
-    protected boolean buildChain (CBone _begin, CBone _end) {
+    // param: _begin - First CBone in the chain.
+    // param: _end - Last CBone in the chain.
+    // return: boolean - False is if no link is found, or if the nodes 
+    //      are not CBones
+    protected boolean buildChain (CBone _begin, CBone _end) { // {{{
         if (_begin == null || _end == null)
             return false;
         CGraphNode curr = _end;
@@ -131,4 +169,6 @@ class CIkChain extends CNode {
 
         return true;
     } //}}}
+
+    //}}}
 }

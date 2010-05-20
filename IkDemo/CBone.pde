@@ -10,9 +10,12 @@ class CBone extends CGraphNode {
 
     //--------------------------------------------------------------------------
 
-    // Drawing function.
+    // Drawing Functions {{{
+
+    // Draw the node to a graphics buffer.
     // The bone is drawn as three disks aligned to each of the axis, and a
     // 2 pixel line to the parent bone.
+    // param: gout - the output PGraphics display buffer
     protected void geom (PGraphics gout) {
         // Draw the disks
         pushStyle();
@@ -45,7 +48,11 @@ class CBone extends CGraphNode {
         gout.sphere(m_size);
     }
 
+    //}}}
+
     //--------------------------------------------------------------------------
+
+    // Childing Functions {{{
 
     // Overridden CGraphNode method to divert the call to the new addChild
     // class. The default offset is set to 100.
@@ -66,4 +73,6 @@ class CBone extends CGraphNode {
         }
         super.addChild(_child);
     }
+
+    //}}}
 }

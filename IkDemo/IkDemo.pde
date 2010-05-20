@@ -41,9 +41,9 @@ int moveZ = 0;
 
 //------------------------------------------------------------------------------
 
-// Scene setup.
+// Scene setup. //{{{
 // All application initialisation occurs here: creating the viewport, camera, scene hierarchy, and creating the IK chain.
-void setup() { //{{{
+void setup() {
     // initialise opengl and create second display buffer.
     size(720, 576, OPENGL);
     hint(ENABLE_OPENGL_4X_SMOOTH);
@@ -89,8 +89,8 @@ void setup() { //{{{
 
 //------------------------------------------------------------------------------
 
-// Draw function called on every frame.
-void draw() { //{{{
+// Draw function called on every frame. //{{{
+void draw() {
     // Reset the display
     background(30);
     lights();
@@ -128,6 +128,8 @@ void draw() { //{{{
 }//}}}
 
 //------------------------------------------------------------------------------
+
+// Input functions {{{
 
 // Keyboard key press.
 void keyPressed() {
@@ -213,4 +215,4 @@ void mouseClicked() {
     if( pick != 0 )
         println( pick );
 }
-
+//}}}

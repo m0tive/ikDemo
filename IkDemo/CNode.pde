@@ -16,6 +16,8 @@ class CNode{
     // Parent graph node.
     private CGraphNode m_parent;
 
+    // Constructors {{{
+
     // Default constructor
     CNode() {
         this(0,0,0,0);
@@ -48,7 +50,11 @@ class CNode{
         m_size = 30;
     }
 
+    //}}}
+
     //--------------------------------------------------------------------------
+
+    // Transform Functions {{{
 
     // Add pitch rotation
     // param: _a - angle to rotate by in radians
@@ -99,7 +105,11 @@ class CNode{
         gout.applyMatrix(mat);
     }
 
+    //}}}
+
     //--------------------------------------------------------------------------
+
+    // Data getters and setters {{{
 
     // Get the node's id
     // return: int - node id
@@ -148,10 +158,16 @@ class CNode{
         return mMat.applyTo(out);
     }
 
+    //}}}
+
     //--------------------------------------------------------------------------
 
-    // Draw the node to a graphics buffer
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Display Functions {{{
+
+    // Draw the node to a graphics buffer.
+    // Beforing calling geom() to draw the node's shape, the transformation 
+    // matrix is applied using applyMatrix().
+    // param: gout - the output PGraphics display buffer
     void display (PGraphics gout) {
         gout.pushMatrix();
         this.applyMatrix(gout);
@@ -161,6 +177,11 @@ class CNode{
         gout.popMatrix();
     }
 
+    // Draw the id shape.
+    // Similar to display() but the id is first converted to a hexadecimal 
+    // number and used as the fill colour. Also, idGeom() is called instead of
+    // geom()
+    // param: gout - the output PGraphics display buffer
     void idDisplay (PGraphics gout) {
         gout.pushStyle();
         gout.fill(0xFF000000 + m_id);
@@ -174,6 +195,10 @@ class CNode{
         gout.popStyle();
     }
 
+    // Draw the nodes shape.
+    // Called by display. The default CNode geom() draws three axis aligned
+    // lines in light blue of length m_size.
+    // param: gout - the output PGraphics display buffer
     protected void geom (PGraphics gout) {
         pushStyle();
         gout.noFill();
@@ -185,8 +210,13 @@ class CNode{
         popStyle();
     }
 
+    // Draw the nodes id display goem.
+    // Called by idDisplay(). The default id shape is a sphere of radius m_size.
+    // param: gout - the output PGraphics display buffer
     protected void idGeom (PGraphics gout) {
         gout.sphere(m_size);
     }
+
+    //}}}
 
 }
